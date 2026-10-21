@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { ArrowRight, Clock, ListChecks, Sparkles, CalendarDays, Hand } from 'lucide-react';
+import { ArrowRight, Clock, ListChecks, Sparkles, CalendarDays, Hand, KeyRound } from 'lucide-react';
 import { CharacterConfig, DimensionKey } from '../types';
 import { AvatarRenderer } from './AvatarRenderer';
 import { DIMENSION_INFO, DIMENSION_KEYS } from '../utils/scoringEngine';
@@ -7,6 +7,8 @@ import { DIMENSION_INFO, DIMENSION_KEYS } from '../utils/scoringEngine';
 interface WelcomeScreenProps {
   onStart: () => void;
   totalSituations: number;
+  hasResult?: boolean;
+  onOpenArea?: () => void;
 }
 
 /** Visuais que o boneco troca quando o jogador toca nele. */
@@ -18,7 +20,7 @@ const LOOKS: CharacterConfig[] = [
   { name: 'Lucas', gender: 'masculino', hair: 'careca', skinColor: 'branco', outfit: 'bermuda_camiseta', footwear: 'sandalia', glasses: true, bibleInHand: true },
 ];
 
-export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, totalSituations }) => {
+export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, totalSituations, hasResult, onOpenArea }) => {
   const [active, setActive] = useState<DimensionKey | null>(null);
   const [look, setLook] = useState(0);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -140,6 +142,16 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, totalSitu
           Começar agora
           <ArrowRight className="w-6 h-6" />
         </button>
+
+        {hasResult && onOpenArea && (
+          <button
+            type="button"
+            onClick={onOpenArea}
+            className="mt-3 w-full sm:w-auto sm:min-w-[320px] h-12 px-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur text-white font-bold text-base hover:bg-white/20 inline-flex items-center justify-center gap-2"
+          >
+            <KeyRound className="w-5 h-5 text-amber-300" /> Ver meu resultado e meu devocional
+          </button>
+        )}
 
         <div className="mt-5 grid grid-cols-3 gap-2 w-full max-w-md text-[11px] sm:text-xs font-bold text-white/80">
           <div className="rounded-xl bg-white/8 border border-white/10 px-2 py-2.5 flex flex-col items-center gap-1" style={{ background: 'rgba(255,255,255,0.07)' }}>

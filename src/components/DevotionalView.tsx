@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, BookOpen, Check, FileText, HandHeart, Lightbulb, Users2, Heart } from 'lucide-react';
 import { CharacterConfig, Dilemma, PersonalizedDay, ScoreProfile } from '../types';
 import { DIMENSION_INFO } from '../utils/scoringEngine';
 import { downloadReportPdf } from '../utils/pdfReport';
+import { dayNumber } from '../utils/storage';
 
 interface DevotionalViewProps {
   character: CharacterConfig;
   profile: ScoreProfile;
   plan: PersonalizedDay[];
   dilemmas: Dilemma[];
+  done: number[];
+  startDate?: string;
+  onToggleDay: (position: number) => void;
   onBack: () => void;
 }
-
-const STORAGE_KEY = 'lider360:devocional-concluidos';
 
 const LEVEL_LABEL = {
   forca: 'Sua força',
@@ -25,35 +27,18 @@ export const DevotionalView: React.FC<DevotionalViewProps> = ({
   profile,
   plan,
   dilemmas,
+  done,
+  startDate,
+  onToggleDay,
   onBack,
 }) => {
-  const [activePos, setActivePos] = useState(1);
-  const [done, setDone] = useState<number[]>([]);
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setDone(JSON.parse(raw));
-    } catch {
-      /* armazenamento indisponível: segue sem persistir */
-    }
-  }, []);
-
-  const toggleDone = (day: number) => {
-    setDone((prev) => {
-      const next = prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day];
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        /* ignora */
-      }
-      return next;
-    });
-  };
+  const today = dayNumber(startDate);
+  const [activePos, setActivePos] = useState(Math.min(today, plan.length));
+  const toggleDone = onToggleDay;
 
   const active = plan.find((d) => d.position === activePos) ?? plan[0];
   const info = DIMENSION_INFO[active.dimension];
-  const completed = plan.filter((d) => done.includes(d.day)).length;
+  const completed = plan.filter((d) => done.includes(d.position)).length;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-5 sm:py-8 pb-24">
@@ -98,7 +83,7 @@ export const DevotionalView: React.FC<DevotionalViewProps> = ({
         {plan.map((d) => {
           const di = DIMENSION_INFO[d.dimension];
           const isActive = d.position === activePos;
-          const isDone = done.includes(d.day);
+          const isDone = done.includes(d.position);
           return (
             <button
               key={d.day}
@@ -109,7 +94,7 @@ export const DevotionalView: React.FC<DevotionalViewProps> = ({
               }`}
               style={isActive ? { borderColor: di.color } : undefined}
             >
-              <span className="block text-[10px] font-black uppercase text-stone-400">Dia {d.position}</span>
+              <span className="block text-[10px] font-black uppercase text-stone-400">Dia {d.position}{d.position === today ? ' · hoje' : ''}</span>
               <span className="block text-2xl my-0.5">{isDone ? '✅' : di.icon}</span>
               <span className="block text-[10px] font-bold text-stone-600 leading-tight">{di.label}</span>
             </button>
@@ -121,7 +106,7 @@ export const DevotionalView: React.FC<DevotionalViewProps> = ({
       <article className="mt-3 bg-white rounded-3xl border border-stone-200 shadow-sm overflow-hidden">
         <header className="p-5 sm:p-7 text-white" style={{ background: `linear-gradient(135deg, ${info.color}, #44281A)` }}>
           <div className="flex flex-wrap items-center gap-2 text-[11px] font-black uppercase tracking-wider text-white/85">
-            <span>Dia {active.position}</span>
+            <span>Dia {active.position}{active.position === today ? ' · hoje' : ''}</span>
             <span className="px-2 py-0.5 rounded-full bg-white/20">{LEVEL_LABEL[active.level]}</span>
             <span>{active.dimensionPercentage}%</span>
           </div>
@@ -206,15 +191,15 @@ export const DevotionalView: React.FC<DevotionalViewProps> = ({
 
           <button
             type="button"
-            onClick={() => toggleDone(active.day)}
+            onClick={() => toggleDone(active.position)}
             className={`w-full h-12 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all ${
-              done.includes(active.day)
+              done.includes(active.position)
                 ? 'bg-emerald-100 text-emerald-800 border-2 border-emerald-300'
                 : 'bg-stone-900 text-white'
             }`}
           >
             <Check className="w-4 h-4" />
-            {done.includes(active.day) ? 'Dia concluído' : 'Marcar este dia como concluído'}
+            {done.includes(active.position) ? 'Dia concluído' : 'Marcar este dia como concluído'}
           </button>
         </div>
       </article>
