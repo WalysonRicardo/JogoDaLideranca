@@ -1,4 +1,5 @@
 import { Dilemma } from '../types';
+import { FAMILY_DILEMMAS } from './familyDilemmas';
 
 /**
  * Situações do grupo de jovens da Igreja Batista no Jardim do Ingá (GO).
@@ -10,7 +11,7 @@ import { Dilemma } from '../types';
  *
  * A seção `bookNote` só aparece no relatório final, como material de reflexão.
  */
-export const DILEMMAS: Dilemma[] = [
+const BASE_DILEMMAS: Dilemma[] = [
   {
     id: 'sit-1',
     category: 'juventude',
@@ -504,3 +505,18 @@ export const DILEMMAS: Dilemma[] = [
     },
   },
 ];
+
+/**
+ * Situações de família (baseadas em «Família Equilibrada, Igreja Abençoada»)
+ * são intercaladas com as demais: uma a cada três situações.
+ */
+export const DILEMMAS: Dilemma[] = (() => {
+  const out: Dilemma[] = [];
+  let f = 0;
+  BASE_DILEMMAS.forEach((d, i) => {
+    out.push(d);
+    if ((i + 1) % 3 === 0 && f < FAMILY_DILEMMAS.length) out.push(FAMILY_DILEMMAS[f++]);
+  });
+  while (f < FAMILY_DILEMMAS.length) out.push(FAMILY_DILEMMAS[f++]);
+  return out;
+})();

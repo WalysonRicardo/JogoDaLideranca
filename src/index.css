@@ -33,3 +33,90 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ───────── Cenas animadas das situações ───────── */
+.sc-stage { container-type: inline-size; }
+
+@keyframes sc-pop { 0% { opacity: 0; transform: scale(.4); } 70% { transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes sc-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4%); } }
+@keyframes sc-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14%); } }
+@keyframes sc-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+@keyframes sc-spin { to { transform: rotate(360deg); } }
+@keyframes sc-shake {
+  0%, 30%, 100% { transform: translateX(0); }
+  5% { transform: translateX(-5%); } 10% { transform: translateX(5%); }
+  15% { transform: translateX(-4%); } 20% { transform: translateX(4%); } 25% { transform: translateX(-2%); }
+}
+@keyframes sc-slide-l { from { opacity: 0; transform: translateX(-140%); } to { opacity: 1; transform: translateX(0); } }
+@keyframes sc-slide-r { from { opacity: 0; transform: translateX(140%); } to { opacity: 1; transform: translateX(0); } }
+@keyframes sc-drop {
+  0% { opacity: 0; transform: translateY(-260%); }
+  55% { opacity: 1; transform: translateY(0); }
+  72% { transform: translateY(-18%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.sc-a-pop   { animation: sc-pop .5s var(--d, 0s) both; }
+.sc-a-bob   { animation: sc-pop .5s var(--d, 0s) both, sc-bob 2.6s calc(var(--d, 0s) + .5s) ease-in-out infinite; }
+.sc-a-float { animation: sc-pop .5s var(--d, 0s) both, sc-float 3.4s calc(var(--d, 0s) + .5s) ease-in-out infinite; }
+.sc-a-pulse { animation: sc-pop .5s var(--d, 0s) both, sc-pulse 1.8s calc(var(--d, 0s) + .5s) ease-in-out infinite; }
+.sc-a-shake { animation: sc-pop .5s var(--d, 0s) both, sc-shake 2.8s calc(var(--d, 0s) + .5s) ease-in-out infinite; }
+.sc-a-spin  { animation: sc-pop .5s var(--d, 0s) both, sc-spin 10s calc(var(--d, 0s) + .5s) linear infinite; }
+.sc-a-slideL { animation: sc-slide-l .9s var(--d, 0s) cubic-bezier(.2,.8,.2,1) both, sc-bob 2.6s calc(var(--d, 0s) + .9s) ease-in-out infinite; }
+.sc-a-slideR { animation: sc-slide-r .9s var(--d, 0s) cubic-bezier(.2,.8,.2,1) both, sc-bob 2.6s calc(var(--d, 0s) + .9s) ease-in-out infinite; }
+.sc-a-drop  { animation: sc-drop 1s var(--d, 0s) ease-in both, sc-bob 2.6s calc(var(--d, 0s) + 1s) ease-in-out infinite; }
+
+.sc-bubble {
+  position: relative;
+  max-width: 36cqw;
+  width: max-content;
+  padding: .45em .8em;
+  border-radius: 1.1em;
+  background: #fff;
+  color: #292524;
+  font-size: clamp(9px, 2.3cqw, 15px);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-wrap: balance;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .18);
+}
+.sc-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -.3em;
+  width: .7em;
+  height: .7em;
+  background: inherit;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 0 0 .2em 0;
+}
+.sc-loud  { background: #fff1f0; border: 2px solid #ef4444; color: #991b1b; }
+.sc-think { background: #f5f5f4; border: 2px dashed #a8a29e; font-style: italic; font-weight: 600; }
+
+/* ───────── Tela de entrada ───────── */
+@keyframes blob-a { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(8%, 10%) scale(1.15); } }
+@keyframes blob-b { 0%, 100% { transform: translate(0, 0) scale(1.1); } 50% { transform: translate(-10%, -8%) scale(.95); } }
+@keyframes orbit { to { transform: rotate(360deg); } }
+@keyframes orbit-rev { to { transform: rotate(-360deg); } }
+@keyframes shimmer { 0% { transform: translateX(-120%) skewX(-18deg); } 60%, 100% { transform: translateX(260%) skewX(-18deg); } }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes wave { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(14deg); } 75% { transform: rotate(-10deg); } }
+
+.blob-a { animation: blob-a 14s ease-in-out infinite; }
+.blob-b { animation: blob-b 18s ease-in-out infinite; }
+.orbit-ring { animation: orbit 46s linear infinite; }
+.orbit-ring:hover, .orbit-ring.paused { animation-play-state: paused; }
+.orbit-ring:hover .orbit-icon, .orbit-ring.paused .orbit-icon { animation-play-state: paused; }
+.orbit-icon { animation: orbit-rev 46s linear infinite; }
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .55), transparent);
+  animation: shimmer 3.4s ease-in-out infinite;
+}
+.rise { animation: rise .7s ease-out both; }
+.wave-hand { display: inline-block; transform-origin: 70% 70%; animation: wave 2.2s ease-in-out infinite; }

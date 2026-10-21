@@ -275,7 +275,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
                 </div>
 
                 <p className="mt-4 text-[11px] text-stone-400 text-center">
-                  Baseado em «Liderança Cristã», de Roger Smalling · Não existe resposta certa
+                  Baseado em R. Smalling e W. de Assumpção · Não existe resposta certa
                 </p>
               </div>
             </div>

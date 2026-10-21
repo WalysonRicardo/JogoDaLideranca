@@ -61,7 +61,7 @@ export interface DilemmaBookNote {
 
 export interface Dilemma {
   id: string;
-  category: 'juventude' | 'igreja' | 'pessoal_familiar' | 'conflito' | 'discipulado';
+  category: 'juventude' | 'igreja' | 'familia' | 'pessoal_familiar' | 'conflito' | 'discipulado';
   title: string;
   context: string;
   situation: string;

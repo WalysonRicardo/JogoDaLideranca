@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { CharacterConfig, ChoiceRecord, Dilemma, DilemmaOption } from '../types';
 import { AvatarRenderer } from './AvatarRenderer';
+import { SceneAnimation } from './SceneAnimation';
 import { ArrowRight, ArrowLeft, BookOpen, Check } from 'lucide-react';
 
 interface DilemmaGameProps {
@@ -13,6 +14,7 @@ interface DilemmaGameProps {
 const CATEGORY_LABEL: Record<Dilemma['category'], { label: string; color: string }> = {
   juventude: { label: 'Jovens', color: 'bg-indigo-100 text-indigo-800' },
   igreja: { label: 'Igreja', color: 'bg-emerald-100 text-emerald-800' },
+  familia: { label: 'Família', color: 'bg-pink-100 text-pink-800' },
   pessoal_familiar: { label: 'Família e vida pessoal', color: 'bg-rose-100 text-rose-800' },
   conflito: { label: 'Conflito', color: 'bg-amber-100 text-amber-800' },
   discipulado: { label: 'Discipulado', color: 'bg-purple-100 text-purple-800' },
@@ -108,7 +110,8 @@ export const DilemmaGame: React.FC<DilemmaGameProps> = ({
 
       {/* Cartão da situação */}
       <div className="bg-white rounded-3xl p-5 sm:p-8 border border-stone-200 shadow-sm">
-        <span className={`inline-block px-3 py-1 rounded-full text-[11px] font-bold ${cat.color}`}>
+        <SceneAnimation dilemmaId={dilemma.id} />
+        <span className={`mt-4 inline-block px-3 py-1 rounded-full text-[11px] font-bold ${cat.color}`}>
           {cat.label}
         </span>
         <h2 className="mt-3 text-2xl sm:text-3xl font-black text-stone-900 tracking-tight leading-tight">

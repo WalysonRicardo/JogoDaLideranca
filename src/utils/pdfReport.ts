@@ -52,7 +52,7 @@ export function buildReportPdf({ character, profile, plan, dilemmas }: ReportInp
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
       setColor(MUTED);
-      doc.text('Líder 360 - Jornada de Liderança Cristã  |  Baseado na obra de Roger Smalling', PAGE.m, PAGE.h - 8);
+      doc.text('Líder 360 - Jornada de Liderança Cristã  |  Baseado em R. Smalling e W. de Assumpção', PAGE.m, PAGE.h - 8);
       doc.text(`${i} / ${pages}`, PAGE.w - PAGE.m, PAGE.h - 8, { align: 'right' });
     }
   };

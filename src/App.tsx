@@ -8,8 +8,8 @@ import { DilemmaGame } from './components/DilemmaGame';
 import { ResultScreen } from './components/ResultScreen';
 import { DevotionalView } from './components/DevotionalView';
 import { SmallingLibraryModal } from './components/SmallingLibraryModal';
-import { AvatarRenderer } from './components/AvatarRenderer';
-import { ArrowRight, BookOpen, Clock, ListChecks, UserRound, Sparkles } from 'lucide-react';
+import { WelcomeScreen } from './components/WelcomeScreen';
+import { BookOpen } from 'lucide-react';
 
 type ScreenState = 'welcome' | 'creator' | 'game' | 'result' | 'devotional';
 
@@ -23,12 +23,6 @@ const DEFAULT_CHARACTER: CharacterConfig = {
   glasses: false,
   bibleInHand: true,
 };
-
-const STEPS = [
-  { icon: UserRound, title: 'Monte seu líder', text: 'Escolha o visual do seu personagem.' },
-  { icon: ListChecks, title: 'Responda 12 situações', text: 'Decida o que você faria. Não há certo ou errado.' },
-  { icon: Sparkles, title: 'Receba seu perfil', text: 'Veja seu resultado, compartilhe e baixe o plano devocional.' },
-];
 
 export default function App() {
   const [screen, setScreen] = useState<ScreenState>('welcome');
@@ -58,11 +52,12 @@ export default function App() {
   };
 
   const inGame = screen === 'game';
+  const isWelcome = screen === 'welcome';
 
   return (
     <div className="min-h-screen bg-[#FBF8F3] text-stone-900 font-sans flex flex-col selection:bg-amber-200">
       {/* Cabeçalho enxuto */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-stone-200">
+      <header className={`sticky top-0 z-40 backdrop-blur border-b ${isWelcome ? 'bg-[#17100d]/80 border-white/10 text-white' : 'bg-white/90 border-stone-200'}`}>
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           <button
             type="button"
@@ -81,7 +76,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setIsLibraryOpen(true)}
-                className="inline-flex items-center gap-1.5 h-9 px-3 text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-xl"
+                className={`inline-flex items-center gap-1.5 h-9 px-3 text-xs font-bold rounded-xl ${isWelcome ? 'text-white/80 bg-white/10 hover:bg-white/20' : 'text-stone-600 bg-stone-100 hover:bg-stone-200'}`}
               >
                 <BookOpen className="w-3.5 h-3.5 text-amber-700" />
                 <span className="hidden sm:inline">Sobre o livro</span>
@@ -102,56 +97,7 @@ export default function App() {
 
       <main className="flex-1">
         {screen === 'welcome' && (
-          <div className="max-w-3xl mx-auto px-4 pt-8 pb-12 sm:pt-14">
-            {/* Hero simples */}
-            <div className="text-center">
-              <div className="mx-auto w-28 h-36 sm:w-32 sm:h-44">
-                <AvatarRenderer config={DEFAULT_CHARACTER} size="fill" showFullBody />
-              </div>
-              <h1 className="mt-4 text-3xl sm:text-5xl font-black tracking-tight leading-[1.1]">
-                Que tipo de líder você é?
-              </h1>
-              <p className="mt-3 text-stone-600 text-base sm:text-lg leading-relaxed max-w-xl mx-auto">
-                Um jogo rápido para líderes de jovens da igreja. Descubra seus pontos fortes e receba um plano
-                devocional de 7 dias feito para você.
-              </p>
-
-              <button
-                type="button"
-                onClick={() => setScreen('creator')}
-                className="mt-7 w-full sm:w-auto sm:min-w-[300px] h-16 px-8 rounded-2xl bg-gradient-to-r from-amber-600 to-orange-600 text-white font-black text-xl shadow-lg shadow-orange-600/25 hover:shadow-xl active:scale-[0.98] transition-all inline-flex items-center justify-center gap-3"
-              >
-                Começar agora
-                <ArrowRight className="w-6 h-6" />
-              </button>
-              <p className="mt-3 text-sm text-stone-500 inline-flex items-center gap-1.5">
-                <Clock className="w-4 h-4" /> Leva cerca de 8 minutos
-              </p>
-            </div>
-
-            {/* Como funciona: 3 passos */}
-            <ol className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {STEPS.map((s, i) => (
-                <li key={s.title} className="bg-white rounded-2xl border border-stone-200 p-4 flex sm:flex-col items-center sm:text-center gap-3 sm:gap-2">
-                  <span className="w-11 h-11 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
-                    <s.icon className="w-5 h-5" />
-                  </span>
-                  <div>
-                    <p className="font-extrabold text-sm">
-                      {i + 1}. {s.title}
-                    </p>
-                    <p className="text-xs text-stone-500 leading-snug mt-0.5">{s.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-
-            <p className="mt-8 text-center text-xs text-stone-400 leading-relaxed">
-              Baseado em «Liderança Cristã: Princípios e Prática», de Roger Smalling.
-              <br />
-              Feito para os líderes de jovens da Igreja Batista no Jardim do Ingá.
-            </p>
-          </div>
+          <WelcomeScreen onStart={() => setScreen('creator')} totalSituations={DILEMMAS.length} />
         )}
 
         {screen === 'creator' && (
@@ -195,7 +141,7 @@ export default function App() {
 
       <SmallingLibraryModal isOpen={isLibraryOpen} onClose={() => setIsLibraryOpen(false)} />
 
-      {!inGame && (
+      {!inGame && !isWelcome && (
         <footer className="border-t border-stone-200 bg-white py-5 text-center text-xs text-stone-400 px-4">
           Líder 360° · Jogo de formação para liderança cristã
         </footer>
